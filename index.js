@@ -1,10 +1,7 @@
-const fastify = require("fastify")({
-  logger: true
-});
+const express = require("express");
+const app = express();
 
-fastify.register(require("./routes/routes"));
+app.use(express.json());
+app.use(require("./routes/routes"));
 
-fastify.listen(3000, (err, address) => {
-  if (err) throw err;
-  console.log(`Server is now listening on ${address}`);
-});
+app.listen(3000, () => console.log(`Lisetning on http://localhost:3000/`));
