@@ -38,6 +38,12 @@ router
   });
 
 router
+ .route("/:username/profile")
+ .get((req, res) => {
+  res.render('profile', {layout: 'index', username: req.params.username});
+ });
+
+router
   .route("/restaurants")
   .get((req, res) => {
     const restaurants = restaurantController.getAll();
