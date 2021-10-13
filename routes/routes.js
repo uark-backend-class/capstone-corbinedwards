@@ -1,10 +1,46 @@
 const express = require("express");
-const restaurantController = require("../controllers/restaurants-controller");
 const router = express.Router();
+const mongoose = require("mongoose");
+const passport = require('passport');
+
+const User = require("../models/user");
+
+const restaurantController = require("../controllers/restaurants-controller");
+
+const TestSchema  = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  name: String
+});
+const TestModel = mongoose.model("test", TestSchema);
 
 router.get("/", (req, res) => {
-  res.send("Hello");
+  res.render('home', {layout: 'index'});
 });
+
+router
+  .route("/login")
+  .get((req, res) => {
+    res.render('login', {layout: 'index'});
+  })
+  .post((req, res, next) => {
+    res.status(201);
+  });
+
+router
+  .route("/signup")
+  .get((req, res) => {
+    res.render('signup', {layout: 'index'});
+  })
+  .post((req, res, next) => {
+    User.register(new User({username: req.body.username}), req.body.password, function(err) {
+      if (err) {
+        console.log('error while resgistering user!', err);
+        return next(err);
+      }
+      
+      console.log('user registered!');
+    });
+  });
 
 router
   .route("/restaurants")

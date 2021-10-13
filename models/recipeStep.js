@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const RecipeIngredient = require("./recipeIngredient");
 
 const RecipeStepSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
   number: Number,
-  ingredients: [RecipeIngredient.Schema],
+  ingredients: [RecipeIngredient.schema],
   instructions: String
 });
 
