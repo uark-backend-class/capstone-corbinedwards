@@ -7,13 +7,7 @@ const User = require("../models/user");
 
 const restaurantController = require("../controllers/restaurants-controller");
 
-const TestSchema  = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  name: String
-});
-const TestModel = mongoose.model("test", TestSchema);
-
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   res.render('home', {layout: 'index'});
 });
 
@@ -22,8 +16,9 @@ router
   .get((req, res) => {
     res.render('login', {layout: 'index'});
   })
-  .post((req, res, next) => {
-    res.status(201);
+  .post(passport.authenticate('local', { failureRedirect: '/login'}), (req, res, next) => {
+    console.log("Authenticated");    
+    res.redirect('/');
   });
 
 router

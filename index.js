@@ -19,14 +19,13 @@ app.engine('handlebars', handlebars({
     partialsDir: `${__dirname}/views/partials`
 }));
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(session({keys: ['secretkey1', 'secretkey2', '...']}));
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use(require("./routes/routes"));
-
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(require("./routes/routes"));
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
