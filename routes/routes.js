@@ -1,28 +1,28 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const passport = require('passport');
 
-const User = require("../models/user");
+const User = require('../models/user');
 
-const restaurantController = require("../controllers/restaurants-controller");
+const restaurantController = require('../controllers/restaurants-controller');
 
 router.get('/', (req, res) => {
   res.render('home', {layout: 'index'});
 });
 
 router
-  .route("/login")
+  .route('/login')
   .get((req, res) => {
     res.render('login', {layout: 'index'});
   })
   .post(passport.authenticate('local', { failureRedirect: '/login'}), (req, res, next) => {
-    console.log("Authenticated");    
-    res.redirect('/');
+    console.log('Authenticated');
+    res.redirect('/' + req.user.username + '/profile');
   });
 
 router
-  .route("/signup")
+  .route('/signup')
   .get((req, res) => {
     res.render('signup', {layout: 'index'});
   })
@@ -38,13 +38,22 @@ router
   });
 
 router
- .route("/:username/profile")
- .get((req, res) => {
-  res.render('profile', {layout: 'index', username: req.params.username});
- });
+  .route('/:username/profile')
+  .get((req, res, next) => {
+    if(req.isAuthenticated()) {
+      res.render('profile', {layout: 'index', username: req.params.username});
+    }
+    else {
+      res.redirect('/login');
+    }
+  })
+  .post((req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
 
 router
-  .route("/restaurants")
+  .route('/restaurants')
   .get((req, res) => {
     const restaurants = restaurantController.getAll();
     res.send(restaurants);
@@ -59,7 +68,7 @@ router
     }
   });
 
-router.get("/restaurants/:id", (req, res) => {
+router.get('/restaurants/:id', (req, res) => {
   const restaurant = restaurantController.getOne(req.params.id);
 
   if (restaurant) {
@@ -67,6 +76,10 @@ router.get("/restaurants/:id", (req, res) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+router.get("*", (req, res) => {
+  res.render('404', { layout: 'index' });
 });
 
 module.exports = router;
