@@ -1,0 +1,17 @@
+<h1>{{username}}</h1>
+<br />
+<h2>Recipes</h2>
+
+<br />
+<br />
+<form method="POST">
+    <input type="submit" name="logout" value="Log Out" />
+</form>
+<br />
+<h2>Restaurants</h2>
+<div class="app-wrapper" style="display: inline-block;">
+    <iframe id="map" width="600" height="450" style="border:0" loading="lazy" src= {{googleMapSource}}></iframe>
+    <div class="restaurant-recipes" id="colorDiv" width="200" height="450" style="background-color: blue;">
+        Text
+    </div>
+</div>

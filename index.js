@@ -12,11 +12,13 @@ const User = require("./models/user");
 
 mongoose.connect(process.env.MONGO_CONNECT), {useMongoClient: true};
 
-app.set('view engine', 'handlebars');
-app.engine('handlebars', handlebars({
+app.set('view engine', 'hbs');
+app.engine('hbs', handlebars({
     layoutsDir: `${__dirname}/views/layouts`,
+    extname: '.hbs',
     defaultLayout: 'index',
-    partialsDir: `${__dirname}/views/partials`
+    partialsDir: `${__dirname}/views/partials`,
+    helpers: require("./config/helpers")
 }));
 
 app.use(express.json());
