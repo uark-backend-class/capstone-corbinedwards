@@ -17,8 +17,7 @@ app.engine('hbs', handlebars({
     layoutsDir: `${__dirname}/views/layouts`,
     extname: '.hbs',
     defaultLayout: 'index',
-    partialsDir: `${__dirname}/views/partials`,
-    helpers: require("./config/helpers")
+    partialsDir: `${__dirname}/views/partials`
 }));
 
 app.use(express.json());
@@ -33,4 +32,4 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.listen(3000, () => console.log(`Lisetning on http://localhost:3000/`));
+app.listen(3000, () => console.log(`Listening on http://localhost:3000/`));

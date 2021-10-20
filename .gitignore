@@ -106,3 +106,6 @@ typings/
 
 capstone-diagram.drawio
 .resources/
+
+/public/test.html
+/public/map.js

@@ -7,7 +7,6 @@ const initMap = require("../config/helpers").initMap;
 const User = require('../models/user');
 
 const restaurantController = require('../controllers/restaurants-controller');
-const { ExpressHandlebars } = require('express-handlebars');
 
 router.get('/', (req, res) => {
   res.render('home', {layout: 'index'});
@@ -43,11 +42,7 @@ router
   .route('/:username/profile')
   .get((req, res, next) => {
     if(req.isAuthenticated()) {
-      res.render('profile', { layout: 'index', 
-                              username: req.params.username, 
-                              googleMapSource: "https://www.google.com/maps/embed/v1/place?key=" + process.env.GOOGLE_MAPS_KEY + "&q=Space+Needle,Fayetteville+AR",
-                              helpers: initMap
-                            });
+      res.render('profile', {layout: 'index', username: req.params.username});
     }
     else {
       res.redirect('/login');

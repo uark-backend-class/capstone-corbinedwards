@@ -9,8 +9,9 @@
 </form>
 <br />
 <h2>Restaurants</h2>
-<div class="app-wrapper" style="display: inline-block;">
-    <iframe id="map" width="600" height="450" style="border:0" loading="lazy" src= {{googleMapSource}}></iframe>
+<div class="app-wrapper">
+    {{> map }}
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <div class="restaurant-recipes" id="colorDiv" width="200" height="450" style="background-color: blue;">
         Text
     </div>
