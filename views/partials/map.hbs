@@ -1,22 +1,4 @@
 <div id="map"></div>
-<script>
-    function initMap() {
-        const myLatlng = { lat: 36.053950, lng: -94.194576 }
-        const map = new google.maps.Map(document.getElementById("map"), {
-            center: myLatlng,
-            zoom: 15,
-        });
-        const marker = new google.maps.Marker({
-            position: myLatlng,
-            map,
-            title: "Click to zoom",
-        });
-        map.addListener("click", () => {
-            console.log("Map Click");
-        });
-    }
-</script>
-<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIIItmsI0RQ9o1YcbpHLLClmznvmK9BKM&callback=initMap" async></script>
-
+<script src="/scripts/map.js"></script>
+<script src={{ mapSource }} async></script>
 
