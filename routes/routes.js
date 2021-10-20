@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
-const initMap = require("../config/helpers").initMap;
 
 const User = require('../models/user');
 
