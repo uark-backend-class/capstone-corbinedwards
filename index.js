@@ -7,6 +7,7 @@ const session = require("cookie-session");
 const handlebars = require("express-handlebars");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const path = require("path");
 
 const User = require("./models/user");
 
@@ -22,7 +23,7 @@ app.engine('hbs', handlebars({
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({keys: ['secretkey1', 'secretkey2', '...']}));
 app.use(passport.initialize());
 app.use(passport.session());

@@ -39,7 +39,7 @@ router
 
 router
   .route('/:username/profile')
-  .get((req, res, next) => {
+  .get((req, res) => {
     if(req.isAuthenticated()) {
       res.render('profile', {layout: 'index', username: req.params.username});
     }
