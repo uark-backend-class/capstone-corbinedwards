@@ -48,7 +48,7 @@
 }
   
 .restaurant-option:nth-child(odd) {
-background-color: #fcfcfc;
+    background-color: #fcfcfc;
 }
 
 #recipes-select {

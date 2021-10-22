@@ -5,6 +5,7 @@ const passport = require('passport');
 
 const User = require('../models/user');
 
+const recipeController = require('../controllers/recipe-controller');
 const restaurantController = require('../controllers/restaurants-controller');
 const googleMapsSource = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_KEY}&libraries=places&callback=initMap`
 
@@ -42,7 +43,7 @@ router
   .route('/:username/profile')
   .get((req, res) => {
     if(req.isAuthenticated()) {
-      res.render('profile', {layout: 'index', username: req.params.username, mapSource: googleMapsSource});
+      res.render('profile', {layout: 'index', username: req.params.username});
     }
     else {
       res.redirect('/login');
@@ -52,6 +53,26 @@ router
     req.logout();
     res.redirect('/');
   });
+
+router
+  .route('/app')
+  .get((req, res) => {
+    if(req.isAuthenticated()) {
+      res.render('app', {layout: 'index', mapSource: googleMapsSource});
+    }
+    else {
+      res.redirect('login');
+    }
+  })
+  .post(async (req, res) => {
+    if(req.body) {
+      const recipes = await recipeController.getRestaurantRecipes(req.body);
+      res.json(recipes);
+    }
+    else {
+      res.send({});
+    }
+  })
 
 router
   .route('/restaurants')
