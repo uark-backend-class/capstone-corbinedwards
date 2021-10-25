@@ -65,9 +65,9 @@ router
     }
   })
   .post(async (req, res) => {
-    if(req.body) {
-      const recipes = await recipeController.getRestaurantRecipes(req.body);
-      res.json(recipes);
+    if(req.body.type === "MenuItem") {
+      const menuItems = await recipeController.getMenuItems(req.body.params);
+      res.json(menuItems);
     }
     else {
       res.send({});

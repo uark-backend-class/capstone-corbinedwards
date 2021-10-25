@@ -1,15 +1,14 @@
 const axios = require("axios");
 
-module.exports.getRestaurantRecipes = async (body) => {
-    body.apiKey = process.env.SPOON_API_KEY;
+module.exports.getMenuItems = async (params) => {
+    params.apiKey = process.env.SPOON_API_KEY;
     
-    const recipes = await axios.get('https://api.spoonacular.com/food/menuItems/search', {params: body});
+    const menuItems = await axios.get('https://api.spoonacular.com/food/menuItems/search', {params: params});
 
-    if (recipes) {
-        return recipes.data;
+    if (menuItems) {
+        return menuItems.data;
     }
     else {
         return {}
     }
 }
-

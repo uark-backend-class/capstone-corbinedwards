@@ -10,10 +10,6 @@ function initMap() {
         center: myLatlng,
         zoom: 17,
     });
-    
-    // map.addListener("click", () => {
-    //     console.log("Map Click");
-    // });
 
     moreButton.onclick = function () {
         moreButton.disabled = true;
@@ -35,12 +31,9 @@ function initMap() {
 function searchCallback(results, status, pagination) {
     if (status !== "OK" || !results) return;
     
-    // console.log(results);
-    
     const restaurantList = document.getElementById("restaurants");
-    
     const restaurants = results.sort((a, b) => (a.name >= b.name) ? 1 : -1);
-    console.log(restaurants);
+    
     for (const restaurant of restaurants) {
         if (restaurant.geometry && restaurant.geometry.location && !document.getElementById(restaurant.name)) {
           
@@ -58,6 +51,7 @@ function searchCallback(results, status, pagination) {
             restaurantList.appendChild(li);
             li.addEventListener("click", () => {
                 map.setCenter(restaurant.geometry.location);
+                loadMenuItems(restaurant.name).then(console.log(`Loaded ${restaurant.name} Menu Items`));
             });
         }
     }
@@ -72,12 +66,39 @@ function searchCallback(results, status, pagination) {
     }
 }
 
-// function createMarker(place) {
-//     if (!place.geometry || !place.geometry.location) return;
+async function loadMenuItems(restaurantName) {
+    const menuItemSelect = document.getElementById("menu-item-select");
+    menuItemSelect.textContent = "Loading...";
     
-//     const marker = new google.maps.Marker({
-//         map,
-//         position: place.geometry.location,
-//     });
+    const menuItems = await reqMenuItem("/app", { type: "MenuItem", params: { query: restaurantName, number: 10 } });
+    menuItemSelect.textContent = "";
+
+    if (!menuItems.menuItems) return {}
     
-// }
+    for(const item of menuItems.menuItems) {
+        const li = document.createElement("li");
+        
+        li.id = item.title;
+        li.className = "menu-item-option"
+        li.textContent = item.title;
+        menuItemSelect.appendChild(li);
+        li.addEventListener("click", () => {
+            loadRecipes().then(console.log("Loaded Recipes"));
+        })
+    }
+}
+
+async function loadRecipes() {
+    return {};
+}
+
+async function reqMenuItem(url, data = {}) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    return res.json();
+}
