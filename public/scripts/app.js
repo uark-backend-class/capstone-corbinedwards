@@ -77,19 +77,34 @@ async function loadMenuItems(restaurantName) {
     
     for(const item of menuItems.menuItems) {
         const li = document.createElement("li");
-        
+
         li.id = item.title;
         li.className = "menu-item-option"
         li.textContent = item.title;
         menuItemSelect.appendChild(li);
         li.addEventListener("click", () => {
-            loadRecipes().then(console.log("Loaded Recipes"));
-        })
+            loadRecipes(parseRecipeString(item.title)).then(console.log("Loaded Recipes"));
+        });
     }
 }
 
-async function loadRecipes() {
-    return {};
+async function loadRecipes(queryStr) {
+    const recipeSelect = document.getElementById("recipe-select");
+    recipeSelect.textContent = "Loading...";
+    
+    const recipes = await reqMenuItem("/app", { type: "Recipes", params: { query: queryStr, addRecipeInformation: true, number: 5 } });
+    recipeSelect.textContent = "";
+
+    if (!recipes.results) return {}
+
+    for(const recipe of recipes.results) {
+        const li = document.createElement("li");
+
+        li.id = recipe.title;
+        li.className = "recipe-item-option"
+        li.textContent = recipe.title;
+        recipeSelect.appendChild(li);
+    }
 }
 
 async function reqMenuItem(url, data = {}) {
@@ -101,4 +116,13 @@ async function reqMenuItem(url, data = {}) {
         body: JSON.stringify(data)
     });
     return res.json();
+}
+
+function parseRecipeString(str) {
+    let newStr = str;
+    newStr = newStr.toLowerCase();
+    newStr = newStr.replace("&", "and");
+    newStr = newStr.replace("the", "");
+
+    return newStr.split(/\s*(-|--)\s*/)[0];
 }

@@ -37,21 +37,8 @@
     flex-grow: 1;
 }
 
-.restaurant-option {
-    background-color: #f1f1f1;
-    padding: 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 1.25rem;
-    cursor: pointer;
-}
-  
-.restaurant-option:nth-child(odd) {
-    background-color: #fcfcfc;
-}
 
-#menu-item-select {
+#menu-item-select, #recipe-select {
     padding-left: 10px;
     flex-basis: 5rem;
     flex-grow: 1;
@@ -64,7 +51,15 @@
     overflow-y: scroll;
 }
 
-.menu-item-option {
+#recipe-select {
+    width: 50%;
+    height: 500px;
+    background-color: rgb(175, 175, 175);
+    display: flex;
+    flex-direction: row;
+}
+
+.restaurant-option, .menu-item-option, .recipe-item-option {
     background-color: #f1f1f1;
     padding: 10px;
     text-overflow: ellipsis;
@@ -72,4 +67,8 @@
     overflow: hidden;
     font-size: 1.25rem;
     cursor: pointer;
+}
+  
+.restaurant-option:nth-child(odd), .menu-item-option:nth-child(odd), .recipe-item-option:nth-child(odd) {
+    background-color: #fcfcfc;
 }

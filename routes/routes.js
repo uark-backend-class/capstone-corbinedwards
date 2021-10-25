@@ -69,6 +69,10 @@ router
       const menuItems = await recipeController.getMenuItems(req.body.params);
       res.json(menuItems);
     }
+    else if(req.body.type === "Recipes") {
+      const recipeItems = await recipeController.getRecipeItems(req.body.params);
+      res.json(recipeItems);
+    }
     else {
       res.send({});
     }
