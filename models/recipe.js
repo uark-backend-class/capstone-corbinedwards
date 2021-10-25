@@ -4,7 +4,9 @@ const RecipeStep = require("./recipeStep");
 
 const RecipeSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  spoonacularID: Number,
   name: String,
+  summary: String,
   ingredients: [RecipeIngredient.schema],
   utensils: [String],
   steps: [RecipeStep.schema] //recipeStep

@@ -1,7 +1,24 @@
-let map;
-let service;
-let getNextPage;
 const moreButton = document.getElementById("more");
+const recipeSelect = document.getElementById("recipe-select");
+const menuItemSelect = document.getElementById("menu-item-select");
+let map;
+let getNextPage;
+let currentRecipes = [];
+
+class SpoonacularRecipe {
+    constructor(id, name, summary, steps) {
+        this.id = id;
+        this.name = name;
+        this.summary = summary;
+        
+        if(steps.length > 0) {
+            this.steps = steps[0].steps;
+        }
+        else {
+            this.steps = [];
+        }
+    }
+}
 
 function initMap() {
     const myLatlng = { lat: 36.053950, lng: -94.194576 }
@@ -24,7 +41,7 @@ function initMap() {
         type: ['restaurant']
     };
 
-    service = new google.maps.places.PlacesService(map);
+    let service = new google.maps.places.PlacesService(map);
     service.nearbySearch(request, searchCallback);
 }
 
@@ -46,7 +63,7 @@ function searchCallback(results, status, pagination) {
             const li = document.createElement("li");
             
             li.id = restaurant.name;
-            li.className = "restaurant-option"
+            li.className = "app-item-option"
             li.textContent = restaurant.name;
             restaurantList.appendChild(li);
             li.addEventListener("click", () => {
@@ -67,10 +84,11 @@ function searchCallback(results, status, pagination) {
 }
 
 async function loadMenuItems(restaurantName) {
-    const menuItemSelect = document.getElementById("menu-item-select");
     menuItemSelect.textContent = "Loading...";
-    
-    const menuItems = await reqMenuItem("/app", { type: "MenuItem", params: { query: restaurantName, number: 10 } });
+    recipeSelect.textContent = "";
+    currentRecipes = [];
+
+    const menuItems = await reqAppItems({ type: "MenuItem", params: { query: restaurantName, number: 10 } });
     menuItemSelect.textContent = "";
 
     if (!menuItems.menuItems) return {}
@@ -79,36 +97,55 @@ async function loadMenuItems(restaurantName) {
         const li = document.createElement("li");
 
         li.id = item.title;
-        li.className = "menu-item-option"
+        li.className = "app-item-option"
         li.textContent = item.title;
         menuItemSelect.appendChild(li);
         li.addEventListener("click", () => {
-            loadRecipes(parseRecipeString(item.title)).then(console.log("Loaded Recipes"));
+            loadRecipes(parseRecipeQuery(item.title)).then(console.log("Loaded Recipes"));
         });
     }
 }
 
 async function loadRecipes(queryStr) {
-    const recipeSelect = document.getElementById("recipe-select");
     recipeSelect.textContent = "Loading...";
-    
-    const recipes = await reqMenuItem("/app", { type: "Recipes", params: { query: queryStr, addRecipeInformation: true, number: 5 } });
+    currentRecipes = [];
+
+    const recipes = await reqAppItems({ type: "Recipes", params: { query: queryStr, addRecipeInformation: "true", number: 5 } });
+    let recipeIndex = 0;
+
     recipeSelect.textContent = "";
 
     if (!recipes.results) return {}
 
     for(const recipe of recipes.results) {
         const li = document.createElement("li");
+        const addLink = document.createElement("a");
+        const recipeID = recipe.title.replace(" ", "-");
+        const newRecipes = new SpoonacularRecipe(recipe.id, recipe.title, recipe.summary, recipe.analyzedInstructions);
+        const currentRecipeIndex = recipeIndex;
 
-        li.id = recipe.title;
-        li.className = "recipe-item-option"
+        currentRecipes.push(newRecipes);
+
+        li.id = recipeID;
+        li.className = "app-item-option"
         li.textContent = recipe.title;
+
+        addLink.id = recipeID + "-link";
+        addLink.style = "float:right;";
+        addLink.textContent = "Add";
+        addLink.addEventListener("click", () => {
+            addUserRecipe(currentRecipes[currentRecipeIndex]).then(console.log("adding user recipe"));
+        });
+
+        li.appendChild(addLink);
         recipeSelect.appendChild(li);
+        
+        recipeIndex += 1;
     }
 }
 
-async function reqMenuItem(url, data = {}) {
-    const res = await fetch(url, {
+async function reqAppItems(data = {}) {
+    const res = await fetch("/app", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -118,11 +155,23 @@ async function reqMenuItem(url, data = {}) {
     return res.json();
 }
 
-function parseRecipeString(str) {
+async function addUserRecipe(recipe) {
+    const res = await fetch("/app", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(recipe)
+    });
+    return res.json();
+}
+
+function parseRecipeQuery(str) {
     let newStr = str;
     newStr = newStr.toLowerCase();
     newStr = newStr.replace("&", "and");
-    newStr = newStr.replace("the", "");
+    newStr = newStr.replace(/\s*the\s*/, "");
+    newStr = newStr.trim();
 
     return newStr.split(/\s*(-|--)\s*/)[0];
 }

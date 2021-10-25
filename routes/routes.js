@@ -77,6 +77,17 @@ router
       res.send({});
     }
   })
+  .put(async (req, res) => {
+    if(req.isAuthenticated()) {
+      if(req.body) {
+        const userRecipeAdd = await recipeController.addRecipe(req.user, req.body);
+        res.json(userRecipeAdd);
+      };
+    }
+    else {
+      res.redirect('login');
+    }
+  });
 
 router
   .route('/restaurants')
