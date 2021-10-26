@@ -100,11 +100,17 @@ router
   });
 
 router
-  .route('/editrestaurant')
+  .route('/editrestaurant/(:restaurantID)?')
   .get((req, res) => {
-    // const restaurants = restaurantController.getAll();
-    // res.send(restaurants);
-    res.render('editRestaurant', {layout: 'index', mapSource: googleMapsSource});
+    if(req.isAuthenticated() && req.user.premium) {
+      //TODO: load restaurant from param
+      let restaurantEdit = { restaurantName: '', location: { lat: '', lng: '' } };
+      if(req.params.restaurantID)
+      res.render('editRestaurant', {layout: 'index', mapSource: googleMapsSource});  
+    }
+    else {
+      res.redirect('/login');
+    }
   })
   .post(async (req, res) => {
     if (req.body) {
