@@ -1,4 +1,5 @@
-<form method="POST">
+<form id="restaurantEdit" method="POST">
+    <h3>Restaurant Info</h3>
     <p>Restaurant Name:</p>
     <input type="text" name="restaurantName" />
     <br />
@@ -7,8 +8,15 @@
     <input id="lat" type="hidden" name="lat" value="" />
     <input id="lng" type="hidden" name="lng" value="" />
     <br />
+    <h3>Menu Items</h3>
+    <ul id="menu-items">
+        <li><input type="text" name="menu-item-0" value="" /></li>
+        <li><input type="text" name="menu-item-1" value="" /></li>
+    </ul>
+    <input id="menuItemsField" type="hidden" name="menuItems" value="" />
+    <br />
     <button name="Submit">Save</button>
 </form>
 
-<script src="/scripts/map.js"></script>
+<script src="/scripts/edit-restaurant.js"></script>
 <script src={{ mapSource }} async></script>

@@ -1,3 +1,5 @@
+const Restaurant = require("../models/restaurants");
+
 const restaurants = [
   { id: 1, name: "Catfish City", menu: ["Catfish Soup", "Beans & Toast"] }
 ];
@@ -16,26 +18,19 @@ module.exports.getOne = id => {
   return getRestaurant;
 };
 
-module.exports.addOne = postRestaurant => {
-  let newID = 0;
-  let newRestaurant = {
-    id: 0,
-    name: "",
-    menu: []
-  };
-
-  if (postRestaurant) {
-    for (r of restaurants) {
-      if (r.id > newID) newID = r.id;
-    }
-    newID += 1;
-
-    newRestaurant.id = newID;
-    newRestaurant.name = postRestaurant.name;
-    newRestaurant.menu = [];
-
-    restaurants.push(newRestaurant);
-
-    return restaurants;
+module.exports.addOne = async (postRestaurant) => {
+  let newRestaurant = await Restaurant.findOne({ name: postRestaurant.name }).exec();
+  if(newRestaurant) return {};
+  newRestaurant = new Restaurant({ name: postRestaurant.restaurantName });
+  newRestaurant.location = { lat: postRestaurant.lat, lng: postRestaurant.lng }
+  newRestaurant.menu = postRestaurant.menuItems.split(",");
+  
+  const savedRestaurant = await newRestaurant.save();
+  
+  if(savedRestaurant) {
+    return savedRestaurant;
+  }
+  else {
+    return {};
   }
 };

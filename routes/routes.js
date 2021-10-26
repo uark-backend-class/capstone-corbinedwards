@@ -106,15 +106,13 @@ router
     // res.send(restaurants);
     res.render('editRestaurant', {layout: 'index', mapSource: googleMapsSource});
   })
-  .post((req, res) => {
-    console.log(req.body);
-    res.redirect('/editrestaurant');
-    // if (req.body) {
-    //   const newRestaurant = restaurantController.addOne(req.body);
-    //   res.json(newRestaurant);
-    // } else {
-    //   res.sendStatus(404);
-    // }
+  .post(async (req, res) => {
+    if (req.body) {
+      const newRestaurant = await restaurantController.addOne(req.body);
+      res.json(newRestaurant);
+    } else {
+      res.sendStatus(404);
+    }
   });
 
 router.get('/restaurants/:id', (req, res) => {
