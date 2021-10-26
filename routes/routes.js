@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const User = require('../models/user');
+const Restaurant = require('../models/restaurants');
 
 const recipeController = require('../controllers/recipe-controller');
 const restaurantController = require('../controllers/restaurants-controller');
@@ -100,13 +101,17 @@ router
   });
 
 router
-  .route('/editrestaurant/(:restaurantID)?')
-  .get((req, res) => {
+  .route('/editrestaurant(/:restaurantID)?')
+  .get(async (req, res) => {
     if(req.isAuthenticated() && req.user.premium) {
-      //TODO: load restaurant from param
-      let restaurantEdit = { restaurantName: '', location: { lat: '', lng: '' } };
-      if(req.params.restaurantID)
-      res.render('editRestaurant', {layout: 'index', mapSource: googleMapsSource});  
+      let restaurantEdit = new Restaurant({ name: '', location: { lat: '', lng: '' }, menu: [] });
+      
+      if(req.params.restaurantID) {
+        const restaurantGet = await restaurantController.getOne(req.params.restaurantID);
+        if (restaurantGet) restaurantEdit = restaurantGet;
+      }
+      
+      res.render('editRestaurant', { layout: 'index', mapSource: googleMapsSource, restaurantEdit: restaurantEdit });  
     }
     else {
       res.redirect('/login');
@@ -115,20 +120,21 @@ router
   .post(async (req, res) => {
     if (req.body) {
       const newRestaurant = await restaurantController.addOne(req.body);
-      res.json(newRestaurant);
+      
+      if(newRestaurant) {
+        res.redirect('/success');
+      }
+      else {
+        res.sendStatus(404);
+      }
+
     } else {
       res.sendStatus(404);
     }
   });
 
-router.get('/restaurants/:id', (req, res) => {
-  const restaurant = restaurantController.getOne(req.params.id);
-
-  if (restaurant) {
-    res.send(restaurant);
-  } else {
-    res.sendStatus(404);
-  }
+router.get('/success', (req, res) => {
+  res.render('success', { layout: 'index' });  
 });
 
 router.get("*", (req, res) => {

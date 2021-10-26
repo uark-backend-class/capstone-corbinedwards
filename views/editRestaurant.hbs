@@ -1,21 +1,34 @@
 <form id="restaurantEdit" method="POST">
+    {{#with restaurantEdit}}
     <h3>Restaurant Info</h3>
     <p>Restaurant Name:</p>
-    <input type="text" name="restaurantName" />
+    <input type="text" name="restaurantName" value={{name}} />
     <br />
     <p>Location:</p>
     <div id="map" class="map" style="width:500px;height:500px;"></div>
-    <input id="lat" type="hidden" name="lat" value="" />
-    <input id="lng" type="hidden" name="lng" value="" />
+    <input id="lat" type="hidden" name="lat" value={{location.lat}} readonly />
+    <input id="lng" type="hidden" name="lng" value={{location.lng}} readonly />
     <br />
     <h3>Menu Items</h3>
     <ul id="menu-items">
-        <li><input type="text" name="menu-item-0" value="" /></li>
-        <li><input type="text" name="menu-item-1" value="" /></li>
+        {{#each menu}}
+            <li>
+                <input type="text" value={{this}} />
+                <a href="#">Remove</a>
+            </li>
+            {{else}}
+            <li>
+                <input type="text" value=""} />
+                <a href="#">Remove</a>
+            </li>
+        {{/each}}
     </ul>
+    <a id="add-menu-item" href="#">Add</a>
+    <br />
     <input id="menuItemsField" type="hidden" name="menuItems" value="" />
     <br />
     <button name="Submit">Save</button>
+    {{/with}}
 </form>
 
 <script src="/scripts/edit-restaurant.js"></script>

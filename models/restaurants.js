@@ -1,3 +1,5 @@
+//TODO: add a 'CreatedBy' & 'EditedBy' field
+
 const mongoose = require("mongoose");
 
 const RestaurantSchema = new mongoose.Schema({

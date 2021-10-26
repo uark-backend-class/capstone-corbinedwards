@@ -14,11 +14,16 @@ module.exports.getOne = async (id) => {
 };
 
 module.exports.addOne = async (postRestaurant) => {
-  let newRestaurant = await Restaurant.findOne({ name: postRestaurant.name }).exec();
-  if(newRestaurant) return {};
-  newRestaurant = new Restaurant({ name: postRestaurant.restaurantName });
-  newRestaurant.location = { lat: postRestaurant.lat, lng: postRestaurant.lng }
+  const getRestaurant = await Restaurant.findOne({ name: postRestaurant.restaurantName }).exec();
+  let newRestaurant = (getRestaurant) ? getRestaurant : new Restaurant();
+  
+  console.log(getRestaurant);
+
+  newRestaurant.name = postRestaurant.restaurantName ;
+  newRestaurant.location = { lat: postRestaurant.lat, lng: postRestaurant.lng };
   newRestaurant.menu = postRestaurant.menuItems.split(",");
+
+  console.log(newRestaurant);
 
   const savedRestaurant = await newRestaurant.save();
   
