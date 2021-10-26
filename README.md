@@ -1,2 +1,2 @@
-# YOUR PROJECT NAME
-Your project description.
+# Recipe Thief
+Find recipes based on menu items from your local restaurants.
