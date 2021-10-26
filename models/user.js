@@ -4,6 +4,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const Recipe = require("./recipe");
 
 const UserSchema = new mongoose.Schema({
+  premium: Boolean,
   recipes: [Recipe.schema]
 });
 

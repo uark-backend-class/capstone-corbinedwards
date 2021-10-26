@@ -16,7 +16,12 @@ router.get('/', (req, res) => {
 router
   .route('/login')
   .get((req, res) => {
-    res.render('login', {layout: 'index'});
+    if(req.isAuthenticated()) {
+      res.redirect('/' + req.user.username + '/profile');
+    }
+    else {
+      res.render('login', {layout: 'index'});
+    }
   })
   .post(passport.authenticate('local', { failureRedirect: '/login'}), (req, res, next) => {
     console.log('Authenticated');
@@ -29,14 +34,15 @@ router
     res.render('signup', {layout: 'index'});
   })
   .post((req, res, next) => {
-    User.register(new User({username: req.body.username}), req.body.password, function(err) {
+    User.register(new User({username: req.body.username, premium: false}), req.body.password, function(err) {
       if (err) {
         console.log('error while resgistering user!', err);
         return next(err);
       }
       
-      console.log('user registered!');
     });
+    console.log('user registered!');
+    res.redirect('/' +req.body.username + '/profile');
   });
 
 router
@@ -58,7 +64,8 @@ router
   .route('/app')
   .get((req, res) => {
     if(req.isAuthenticated()) {
-      res.render('app', {layout: 'index', mapSource: googleMapsSource});
+      const hideControls = req.user.premium ? "display:inline;" : "display:none;";
+      res.render('app', {layout: 'index', mapSource: googleMapsSource, hidePremiumControls: hideControls});
     }
     else {
       res.redirect('login');
@@ -80,8 +87,11 @@ router
   .put(async (req, res) => {
     if(req.isAuthenticated()) {
       if(req.body) {
-        const userRecipeAdd = await recipeController.addRecipe(req.user, req.body);
-        res.json(userRecipeAdd);
+        await recipeController.addRecipe(req.user, req.body);
+        res.sendStatus(200);
+      }
+      else {
+        res.sendStatus(502);
       };
     }
     else {
@@ -90,19 +100,21 @@ router
   });
 
 router
-  .route('/restaurants')
+  .route('/editrestaurant')
   .get((req, res) => {
-    const restaurants = restaurantController.getAll();
-    res.send(restaurants);
+    // const restaurants = restaurantController.getAll();
+    // res.send(restaurants);
+    res.render('editRestaurant', {layout: 'index', mapSource: googleMapsSource});
   })
   .post((req, res) => {
     console.log(req.body);
-    if (req.body) {
-      const newRestaurant = restaurantController.addOne(req.body);
-      res.json(newRestaurant);
-    } else {
-      res.sendStatus(404);
-    }
+    res.redirect('/editrestaurant');
+    // if (req.body) {
+    //   const newRestaurant = restaurantController.addOne(req.body);
+    //   res.json(newRestaurant);
+    // } else {
+    //   res.sendStatus(404);
+    // }
   });
 
 router.get('/restaurants/:id', (req, res) => {

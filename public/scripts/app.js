@@ -88,10 +88,14 @@ async function loadMenuItems(restaurantName) {
     recipeSelect.textContent = "";
     currentRecipes = [];
 
-    const menuItems = await reqAppItems({ type: "MenuItem", params: { query: restaurantName, number: 10 } });
+    let menuItems = await reqAppItems({ type: "MenuItem", params: { query: restaurantName, number: 10 } });
     menuItemSelect.textContent = "";
 
-    if (!menuItems.menuItems) return {}
+    if (!menuItems.menuItems) {
+        // TODO: query mongo for restaurant items
+        // TODO: if no mongo restaurants, offer to add
+        return {}
+    }
     
     for(const item of menuItems.menuItems) {
         const li = document.createElement("li");
@@ -134,7 +138,9 @@ async function loadRecipes(queryStr) {
         addLink.style = "float:right;";
         addLink.textContent = "Add";
         addLink.addEventListener("click", () => {
-            addUserRecipe(currentRecipes[currentRecipeIndex]).then(console.log("adding user recipe"));
+            addUserRecipe(currentRecipes[currentRecipeIndex])
+            .then(addLink.textContent = "Added!")
+            .catch(err => console.log(err));
         });
 
         li.appendChild(addLink);

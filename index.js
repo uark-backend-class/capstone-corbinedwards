@@ -11,7 +11,7 @@ const path = require("path");
 
 const User = require("./models/user");
 
-mongoose.connect(process.env.MONGO_CONNECT), {useMongoClient: true};
+mongoose.connect(process.env.MONGO_CONNECT);
 
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars({

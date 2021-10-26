@@ -23,7 +23,6 @@ module.exports.getRecipeItems = async (params) => {
     let recipeItems = await axios.get("https://api.spoonacular.com/recipes/complexSearch", {params: params});
 
     while(recipeItems.data && recipeItems.data.results.length === 0) {
-        console.log("in while loop");
         params.query = params.query.substring(0, params.query.lastIndexOf(" "));
         recipeItems = await axios.get("https://api.spoonacular.com/recipes/complexSearch", {params: params});
     }
@@ -37,7 +36,7 @@ module.exports.getRecipeItems = async (params) => {
 }
 
 module.exports.addRecipe = async (user, data) => {
-    if(user.recipes.filter(r => r.spoonacularID === data.id).length > 0) return {};
+    if(user.recipes.find(r => r.spoonacularID === data.id)) return {};
 
     const newRecipe = new Recipe;
     const ingredients = [];
@@ -58,11 +57,11 @@ module.exports.addRecipe = async (user, data) => {
             newIngredient.name = ingredient.name;
 
             newStep.ingredients.push(newIngredient);
-            if(ingredients.filter(i => i.id === ingredient.id).length === 0) ingredients.push(newIngredient);
+            if(ingredients.find(i => i.id === ingredient.id)) ingredients.push(newIngredient);
         });
 
         step.equipment.forEach(utensil => {
-            if(utensils.filter(u => u === utensil.name).length === 0) utensils.push(utensil.name);
+            if(utensils.find(u => u === utensil.name)) utensils.push(utensil.name);
         });
 
         newRecipe.steps.push(newStep);
@@ -74,8 +73,5 @@ module.exports.addRecipe = async (user, data) => {
     user.recipes.push(newRecipe);
     
     await user.save();
-
-    console.log(user);
-
     return data;
 }

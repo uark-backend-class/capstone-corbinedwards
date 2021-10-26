@@ -1,0 +1,14 @@
+<form method="POST">
+    <p>Restaurant Name:</p>
+    <input type="text" name="restaurantName" />
+    <br />
+    <p>Location:</p>
+    <div id="map" class="map" style="width:500px;height:500px;"></div>
+    <input id="lat" type="hidden" name="lat" value="" />
+    <input id="lng" type="hidden" name="lng" value="" />
+    <br />
+    <button name="Submit">Save</button>
+</form>
+
+<script src="/scripts/map.js"></script>
+<script src={{ mapSource }} async></script>
