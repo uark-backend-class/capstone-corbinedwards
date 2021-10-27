@@ -26,7 +26,7 @@ router
       res.redirect('/' + req.user.username + '/profile');
     }
     else {
-      res.render('login', {layout: 'index'});
+      res.render('account', {layout: 'index', title: 'Login'});
     }
   })
   .post(passport.authenticate('local', { failureRedirect: '/login'}), (req, res, next) => {
@@ -41,7 +41,7 @@ router
       res.redirect('/' + req.user.username + '/profile');
     }
     else {
-      res.render('signup', {layout: 'index'});
+      res.render('account', {layout: 'index', title: 'Sign Up'});
     }
   })
   .post((req, res, next) => {
@@ -67,9 +67,13 @@ router
     }
   })
   .post((req, res) => {
-    req.logout();
-    res.redirect('/');
+    res.redirect('/logout');
   });
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
 router
   .route('/app')
