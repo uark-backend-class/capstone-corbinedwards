@@ -21,7 +21,12 @@ app.engine('hbs', expressHandlebars({
     extname: '.hbs',
     defaultLayout: 'index',
     partialsDir: `${__dirname}/views/partials`,
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
+    handlebars: allowInsecurePrototypeAccess(Handlebars),
+    helpers: {
+        authenticated: function() {
+            return app.locals.authenicated;
+        }
+    }
 }));
 
 app.use(express.json());
@@ -30,7 +35,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({keys: ['secretkey1', 'secretkey2', '...']}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use(require("./routes/routes"));
+
+app.locals.authenticated = false;
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());

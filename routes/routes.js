@@ -10,6 +10,11 @@ const recipeController = require('../controllers/recipe-controller');
 const restaurantController = require('../controllers/restaurants-controller');
 const googleMapsSource = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_KEY}&libraries=places&callback=initMap`
 
+router.use(function (req, res, next) {
+  req.app.locals.authenicated = req.isAuthenticated();
+  next();
+})
+
 router.get('/', (req, res) => {
   res.render('home', {layout: 'index'});
 });
@@ -32,7 +37,12 @@ router
 router
   .route('/signup')
   .get((req, res) => {
-    res.render('signup', {layout: 'index'});
+    if(req.isAuthenticated()) {
+      res.redirect('/' + req.user.username + '/profile');
+    }
+    else {
+      res.render('signup', {layout: 'index'});
+    }
   })
   .post((req, res, next) => {
     User.register(new User({username: req.body.username, premium: false}), req.body.password, function(err) {
@@ -50,7 +60,6 @@ router
   .route('/:username/profile')
   .get((req, res) => {
     if(req.isAuthenticated() && req.params.username === req.user.username) {
-      console.log(req.user.recipes);
       res.render('profile', {layout: 'index', username: req.params.username, savedRecipes: req.user.recipes});
     }
     else {
