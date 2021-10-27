@@ -31,6 +31,28 @@ app.engine('hbs', expressHandlebars({
         },
         toId: function(prop) {
             return "#id-" + prop.toString();
+        },
+        commaList: function(input) {
+            let list = "";
+            if(input.length > 0) list = input.join(', ');
+            return list;
+        },
+        listSteps: function(steps) {
+            let stepsBlock = "";
+
+            for(step of steps) {
+                let stepIngredients = step.ingredients.map(i => ' ' + i.name).toString();
+                // stepIngredients = stepIngredients.toString().trim();
+                // stepIngredients = stepIngredients.replace(/.$/, '');
+
+                stepsBlock += '<div>'
+                stepsBlock += `<h5>Step ${step.number}</h5>`
+                stepsBlock += `<p><strong>Ingredients: </strong>${stepIngredients}</p>`
+                stepsBlock += `<p>${step.instructions}</p>`
+                stepsBlock += '</div>\n'
+            }
+
+            return stepsBlock;
         }
     }
 }));

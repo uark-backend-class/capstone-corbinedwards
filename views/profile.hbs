@@ -21,7 +21,12 @@
                 </h2>
                 <div id={{toString this.spoonacularID}} class="accordion-collapse collapse" aria-labelledby={{toString this.name}} data-bs-parent="#saved-recipes">
                     <div class="accordion-body">
+                        <h3>Summary</h3>
                         {{{this.summary}}}
+                        <br />
+                        <br />
+                        <h3>Steps</h3>
+                        <p>{{{listSteps this.steps}}}</p>
                     </div>
                 </div>
             </div>

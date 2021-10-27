@@ -60,6 +60,7 @@ router
   .route('/:username/profile')
   .get((req, res) => {
     if(req.isAuthenticated() && req.params.username === req.user.username) {
+      console.log(req.user.recipes[0].utensils);
       res.render('profile', {layout: 'index', username: req.params.username, savedRecipes: req.user.recipes});
     }
     else {
