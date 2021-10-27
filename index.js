@@ -72,4 +72,4 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.listen(3000, () => console.log(`Listening on http://localhost:3000/`));
+app.listen(process.env.PORT, () => console.log(`Listening on http://localhost:3000/`));
