@@ -27,10 +27,10 @@ app.engine('hbs', expressHandlebars({
             return app.locals.authenicated;
         },
         toString: function(prop) {
-            return prop.toString();
+            return "id-" + prop.toString();
         },
         toId: function(prop) {
-            return "#" + prop.toString();
+            return "#id-" + prop.toString();
         }
     }
 }));

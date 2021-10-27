@@ -1,7 +1,7 @@
 <div class="container-fluid d-inline-flex">
     <ul class="nav flex-column me-5 pt-4">
         <li class="nav-item">
-            <a class="nav-link" href="/app">Search</a>
+            <a class="nav-link" href="/app">App</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/logout">Logout</a>
@@ -15,21 +15,20 @@
             {{#each savedRecipes}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id={{toString this.name}}>
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={{toId this.spoonacularID}} aria-expanded="true" aria-controls={{toString this.spoonacularID}}>
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={{toId this.spoonacularID}} aria-expanded="false" aria-controls={{toString this.spoonacularID}}>
                     {{this.name}}
                 </button>
                 </h2>
-                <div id={{toString this.spoonacularID}} class="accordion-collapse collapse show" aria-labelledby={{toString this.name}} data-bs-parent="#saved-recipes">
-                <div class="accordion-body">
-                    {{this.summary}}
-                </div>
+                <div id={{toString this.spoonacularID}} class="accordion-collapse collapse" aria-labelledby={{toString this.name}} data-bs-parent="#saved-recipes">
+                    <div class="accordion-body">
+                        {{{this.summary}}}
+                    </div>
                 </div>
             </div>
             {{else}}
             <p>No saved recipes.</p>
             {{/each}}
         </div>
-
         <br />
         <form method="POST">
             <button type="submit" class="btn btn-outline-danger btn-sm">Log Out</button>
