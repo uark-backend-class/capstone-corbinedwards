@@ -101,24 +101,40 @@ async function loadMenuItems(restaurantName) {
     recipeSelect.textContent = "";
     currentRecipes = [];
 
-    let menuItems = await reqAppItems({ type: "MenuItem", params: { query: restaurantName, number: 10 } });
+    const restaurant = currentRestaurants.find(r => r.name === restaurantName);
+    let menuItems;
+
+    if (!restaurant || restaurant.menu.length === 0) {
+        menuItems = await reqAppItems({ type: "MenuItem", params: { query: restaurantName, number: 10 } });
+        
+        if(menuItems) {
+            menuItems = menuItems.menuItems.map(m => m.title);
+        }
+        else {
+            menuItems = [];
+        }
+    }
+    else {
+        menuItems = restaurant.menu;
+    }
+    
     menuItemSelect.textContent = "";
 
-    if (!menuItems.menuItems) {
+    if (!menuItems) {
         // TODO: query mongo for restaurant items
         // TODO: if no mongo restaurants, offer to add
         return {}
     }
-    
-    for(const item of menuItems.menuItems) {
+
+    for(const item of menuItems) {
         const li = document.createElement("li");
 
-        li.id = item.title;
+        li.id = item;
         li.className = "app-item-option"
-        li.textContent = item.title;
+        li.textContent = item;
         menuItemSelect.appendChild(li);
         li.addEventListener("click", () => {
-            loadRecipes(parseRecipeQuery(item.title)).then(console.log("Loaded Recipes"));
+            loadRecipes(parseRecipeQuery(item)).then(console.log("Loaded Recipes"));
         });
     }
 }
