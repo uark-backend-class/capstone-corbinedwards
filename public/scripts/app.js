@@ -65,7 +65,6 @@ function initMap() {
 }
 
 function searchCallback(results, status, pagination) {
-    
     loadRestaurants()
     .then(() => {
         if (status === "OK" && results) {
@@ -92,6 +91,7 @@ function searchCallback(results, status, pagination) {
 }
 
 async function loadRestaurants() {
+    currentRestaurants = [];
     const savedRestaurants = await reqAppItems({ type: "Restaurants" });
     savedRestaurants.forEach((r) => currentRestaurants.push(new Restaurant(r.name, r.location, r.menu)));
 }
@@ -198,7 +198,7 @@ async function addUserRecipe(recipe) {
         },
         body: JSON.stringify(recipe)
     });
-    return res.json();
+    return res;
 }
 
 function parseRecipeQuery(str) {

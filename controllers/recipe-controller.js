@@ -43,7 +43,7 @@ module.exports.addRecipe = async (user, data) => {
     const utensils = [];
 
     newRecipe.spoonacularID = data.id;
-    newRecipe.name = data.title;
+    newRecipe.name = data.name;
     newRecipe.summary = data.summary;
 
     for(const step of data.steps) {
