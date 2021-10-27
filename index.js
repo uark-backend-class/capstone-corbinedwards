@@ -25,6 +25,12 @@ app.engine('hbs', expressHandlebars({
     helpers: {
         authenticated: function() {
             return app.locals.authenicated;
+        },
+        toString: function(prop) {
+            return prop.toString();
+        },
+        toId: function(prop) {
+            return "#" + prop.toString();
         }
     }
 }));
