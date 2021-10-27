@@ -3,7 +3,7 @@
     text-align: center;
 }
 
-.app-wrapper {
+/*.app-wrapper {
     width: 100%;
     height: 500px;
     background-color: rgb(175, 175, 175);
@@ -16,54 +16,33 @@
     width: 50%;
     display: flex;
     flex-direction: row;
-}
+}*/
 
 .map {
-    height: 100%;
-    width: 50%;
+    height: 40vh;
+    width: 100%;
 }
 
 #search-results {
     padding-left: 10px;
-    flex-basis: 5rem;
-    flex-grow: 1;
-    padding: 1rem;
-    height: 100%;
-    width: 50%;
+    padding: 0rem 1rem 1rem 1rem;
+    height: 40vh;
+    width: 100%;
     box-sizing: border-box;
     overflow: auto;
 }
 
-#restaurants {
+.app-list {
     list-style-type: none;
     padding: 0;
     margin: 0;
     overflow-y: scroll;
     flex-grow: 1;
-}
-
-#menu-item-select, #recipe-select {
-    padding-left: 10px;
     flex-basis: 5rem;
-    flex-grow: 1;
-    padding: 1rem;
-    height: 100%;
-    width: 50%;
-    box-sizing: border-box;
-    list-style-type: none;
-    margin: 0;
-    overflow-y: scroll;
+    height: 90%;
 }
 
-#recipe-select {
-    width: 50%;
-    height: 500px;
-    background-color: rgb(175, 175, 175);
-    display: flex;
-    flex-direction: column;
-}
-
-.app-item-option {
+/*.app-item-option {
     background-color: #f1f1f1;
     padding: 10px;
     text-overflow: ellipsis;
@@ -72,7 +51,9 @@
     font-size: 1.25rem;
     cursor: pointer;
 }
-  
-.app-item-option:nth-child(odd) {
-    background-color: #fcfcfc;
+  */
+
+.app-item-option:hover {
+    background-color: #0d6efd;
+    color:  white;
 }

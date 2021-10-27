@@ -1,4 +1,32 @@
-<div class="app-wrapper">
+<div class="container-fluid ps-4 pe-4">
+    <div class="row" id="restaurant-select">
+        <div class="col col-5">
+          <div id="map" class="map"></div>
+        </div>
+        <div class="col" id="search-results">
+            <h3>Restaurants</h3>
+            <div style="height: 90%; width: 100%; display: flex; flex-direction: column;">
+                <ul id="restaurants" class="app-list list-group"></ul>
+                <div class="ps-2 pe-2 mt-1" style="height: 10%; width: 50%; display: flex; flex-direction: column; align-content: space-between;">
+                    <button type="button" class="btn btn-outline-primary" id="more">Load more results</button>
+                    <a href="/editrestaurant" class="app-add-item" style={{hidePremiumControls}}>Add Restaurant...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col">
+            <h3>Menu Items</h3>
+            <ul id="menu-item-select" class="app-list list-group">Select a restaurant</ul>
+        </div>
+        <div class="col">
+            <h3>Recipes</h3>
+            <ul id="recipe-select" class="app-list list-group">Select a menu item</ul>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="app-wrapper">
     <div id="restaurant-select">
         <div id="map" class="map"></div>
         <div id="search-results">
@@ -15,7 +43,7 @@
 </div>
 <ul id="recipe-select">
     Recipes
-</ul>
+</ul> -->
 
 <script src="/scripts/app.js"></script>
 <script src={{ mapSource }} async></script>

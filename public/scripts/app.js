@@ -130,7 +130,7 @@ async function loadMenuItems(restaurantName) {
         const li = document.createElement("li");
 
         li.id = item;
-        li.className = "app-item-option"
+        li.className = "app-item-option list-group-item list-group-item-action"
         li.textContent = item;
         menuItemSelect.appendChild(li);
         li.addEventListener("click", () => {
@@ -152,7 +152,7 @@ async function loadRecipes(queryStr) {
 
     for(const recipe of recipes.results) {
         const li = document.createElement("li");
-        const addLink = document.createElement("a");
+        const addLink = document.createElement("button");
         const recipeID = recipe.title.replace(" ", "-");
         const newRecipes = new SpoonacularRecipe(recipe.id, recipe.title, recipe.summary, recipe.analyzedInstructions);
         const currentRecipeIndex = recipeIndex;
@@ -160,10 +160,12 @@ async function loadRecipes(queryStr) {
         currentRecipes.push(newRecipes);
 
         li.id = recipeID;
-        li.className = "app-item-option"
+        li.className = "app-item-option list-group-item list-group-item-action"
+        li.style = "width: 95%;"
         li.textContent = recipe.title;
 
         addLink.id = recipeID + "-link";
+        addLink.className = "btn btn-success btn-sm"
         addLink.style = "float:right;";
         addLink.textContent = "Add";
         addLink.addEventListener("click", () => {
@@ -225,7 +227,7 @@ function setRestaurants() {
             });
             
             li.id = restaurant.name;
-            li.className = "app-item-option"
+            li.className = "app-item-option list-group-item list-group-item-action"
             li.textContent = restaurant.name;
             restaurantList.appendChild(li);
             li.addEventListener("click", () => {
