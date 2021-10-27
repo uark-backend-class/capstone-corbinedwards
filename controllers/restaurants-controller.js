@@ -4,8 +4,8 @@ const restaurants = [
   { id: 1, name: "Catfish City", menu: ["Catfish Soup", "Beans & Toast"] }
 ];
 
-module.exports.getAll = () => {
-  return restaurants;
+module.exports.getAll = async () => {
+  return await Restaurant.find({});
 };
 
 module.exports.getOne = async (id) => {

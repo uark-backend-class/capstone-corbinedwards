@@ -1,9 +1,28 @@
 const moreButton = document.getElementById("more");
 const recipeSelect = document.getElementById("recipe-select");
 const menuItemSelect = document.getElementById("menu-item-select");
+const restaurantList = document.getElementById("restaurants");
 let map;
 let getNextPage;
+let currentRestaurants = [];
 let currentRecipes = [];
+
+class Restaurant {
+    constructor(name, location, menu) {
+        this.name = name;
+        this.menu = menu;
+        this.location = {lat: 0, lng: 0};
+
+        if(location.location) {
+            this.location.lat = location.location.lat();
+            this.location.lng = location.location.lng();
+        }
+        else {
+            this.location.lat = Number(location.lat);
+            this.location.lng = Number(location.lng);
+        }
+    }
+}
 
 class SpoonacularRecipe {
     constructor(id, name, summary, steps) {
@@ -25,7 +44,7 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById("map"), {
         center: myLatlng,
-        zoom: 17,
+        zoom: 18,
     });
 
     moreButton.onclick = function () {
@@ -46,41 +65,35 @@ function initMap() {
 }
 
 function searchCallback(results, status, pagination) {
-    if (status !== "OK" || !results) return;
     
-    const restaurantList = document.getElementById("restaurants");
-    const restaurants = results.sort((a, b) => (a.name >= b.name) ? 1 : -1);
-    
-    for (const restaurant of restaurants) {
-        if (restaurant.geometry && restaurant.geometry.location && !document.getElementById(restaurant.name)) {
-          
-            new google.maps.Marker({
-                map,
-                title: restaurant.name,
-                position: restaurant.geometry.location,
-            });
-          
-            const li = document.createElement("li");
-            
-            li.id = restaurant.name;
-            li.className = "app-item-option"
-            li.textContent = restaurant.name;
-            restaurantList.appendChild(li);
-            li.addEventListener("click", () => {
-                map.setCenter(restaurant.geometry.location);
-                loadMenuItems(restaurant.name).then(console.log(`Loaded ${restaurant.name} Menu Items`));
+    loadRestaurants()
+    .then(() => {
+        if (status === "OK" && results) {
+            const restaurants = results;
+            restaurants.forEach((r) => {
+                if(!currentRestaurants.find(cr => cr.name === r.name)) currentRestaurants.push(new Restaurant(r.name, r.geometry, []));
             });
         }
-    }
 
-    moreButton.disabled = !pagination || !pagination.hasNextPage;
+        setRestaurants();
+    })
+    .catch((err) => {
+        console.log(err);
+    });
     
+    moreButton.disabled = !pagination || !pagination.hasNextPage;
+
     if (pagination && pagination.hasNextPage) {
         getNextPage = () => {
-          // Note: nextPage will call the same handler function as the initial call
-          pagination.nextPage();
+            // Note: nextPage will call the same handler function as the initial call
+            pagination.nextPage();
         };
     }
+}
+
+async function loadRestaurants() {
+    const savedRestaurants = await reqAppItems({ type: "Restaurants" });
+    savedRestaurants.forEach((r) => currentRestaurants.push(new Restaurant(r.name, r.location, r.menu)));
 }
 
 async function loadMenuItems(restaurantName) {
@@ -180,4 +193,29 @@ function parseRecipeQuery(str) {
     newStr = newStr.trim();
 
     return newStr.split(/\s*(-|--)\s*/)[0];
+}
+
+function setRestaurants() {
+    currentRestaurants = currentRestaurants.sort((a, b) => (a.name >= b.name) ? 1 : -1);
+    
+    for (const restaurant of currentRestaurants) {
+        if (restaurant.location && !document.getElementById(restaurant.name)) {
+            const li = document.createElement("li");
+
+            new google.maps.Marker({
+                map,
+                title: restaurant.name,
+                position: restaurant.location,
+            });
+            
+            li.id = restaurant.name;
+            li.className = "app-item-option"
+            li.textContent = restaurant.name;
+            restaurantList.appendChild(li);
+            li.addEventListener("click", () => {
+                map.setCenter(restaurant.location);
+                loadMenuItems(restaurant.name).then(console.log(`Loaded ${restaurant.name} Menu Items`));
+            });
+        }
+    }
 }

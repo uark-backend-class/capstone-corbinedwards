@@ -69,11 +69,15 @@ router
       res.render('app', {layout: 'index', mapSource: googleMapsSource, hidePremiumControls: hideControls});
     }
     else {
-      res.redirect('login');
+      res.redirect('/login');
     }
   })
   .post(async (req, res) => {
-    if(req.body.type === "MenuItem") {
+    if(req.body.type === "Restaurants") {
+      const restaurants = await restaurantController.getAll();
+      res.json(restaurants);
+    }
+    else if(req.body.type === "MenuItem") {
       const menuItems = await recipeController.getMenuItems(req.body.params);
       res.json(menuItems);
     }
